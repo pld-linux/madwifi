@@ -105,6 +105,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 		M=$PWD O=$PWD \
 		%{?with_verbose:V=1}
 	%{__make} \
+		O=$PWD \
 		CC="%{__cc}" CPP="%{__cpp}" \
 		%{?with_verbose:V=1}
 
