@@ -28,14 +28,14 @@ BuildRequires:	sharutils
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Atheros WiFi card driver
+Atheros WiFi card driver.
 
 %description -l pl
-Sterownik karty radiowej Atheros
+Sterownik karty radiowej Atheros.
 
 # kernel subpackages.
 
-%package -n kernel-net-atheros
+%package -n kernel-net-madwifi
 Summary:	Linux driver for Atheros cards
 Summary(pl):	Sterownik dla Linuksa do kart Atheros
 Release:	%{_rel}@%{_kernel_ver_str}
@@ -46,17 +46,17 @@ Requires(post,postun):	/sbin/depmod
 Requires(postun):	%releq_kernel_up
 %endif
 
-%description -n kernel-net-atheros
+%description -n kernel-net-madwifi
 This is driver for Atheros card for Linux.
 
 This package contains Linux module.
 
-%description -n kernel-net-atheros -l pl
+%description -n kernel-net-madwifi -l pl
 Sterownik dla Linuksa do kart Atheros.
 
 Ten pakiet zawiera modu³ j±dra Linuksa.
 
-%package -n kernel-smp-net-atheros
+%package -n kernel-smp-net-madwifi
 Summary:	Linux SMP driver for %{name} cards
 Summary(pl):	Sterownik dla Linuksa SMP do kart %{name}
 Release:	%{_rel}@%{_kernel_ver_str}
@@ -67,12 +67,12 @@ Requires(post,postun):	/sbin/depmod
 Requires(postun):	%releq_kernel_smp
 %endif
 
-%description -n kernel-smp-net-atheros
+%description -n kernel-smp-net-madwifi
 This is driver for Atheros cards for Linux.
 
 This package contains Linux SMP module.
 
-%description -n kernel-smp-net-atheros -l pl
+%description -n kernel-smp-net-madwifi -l pl
 Sterownik dla Linuksa do kart Atheros.
 
 Ten pakiet zawiera modu³ j±dra Linuksa SMP.
@@ -156,25 +156,25 @@ done
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-n kernel-net-atheros
+%post	-n kernel-net-madwifi
 %depmod %{_kernel_ver}
 
-%postun	-n kernel-net-atheros
+%postun	-n kernel-net-madwifi
 %depmod %{_kernel_ver}
 
-%post	-n kernel-smp-net-atheros
+%post	-n kernel-smp-net-madwifi
 %depmod %{_kernel_ver}smp
 
-%postun	-n kernel-smp-net-atheros
+%postun	-n kernel-smp-net-madwifi
 %depmod %{_kernel_ver}smp
 
 %if %{with kernel}
-%files -n kernel-net-atheros
+%files -n kernel-net-madwifi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/net/*.ko*
 
 %if %{with smp} && %{with dist_kernel}
-%files -n kernel-smp-net-atheros
+%files -n kernel-smp-net-madwifi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/net/*.ko*
 %endif
