@@ -111,6 +111,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 
 	mv ath/ath_pci{,-$cfg}.ko
 	mv ath_hal/ath_hal{,-$cfg}.ko
+	mv ath_rate/onoe/ath_rate_onoe{,-$cfg}.ko
 	for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
 		mv net80211/$i{,-$cfg}.ko
 	done
@@ -131,6 +132,8 @@ install ath/ath_pci-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_pci.ko
 install ath_hal/ath_hal-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_hal.ko
+install ath_rate/onoe/ath_rate_onoe-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_rate_onoe.ko
 for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
 	install net80211/$i-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
 		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/$i.ko
@@ -140,6 +143,8 @@ install ath/ath_pci-smp.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_pci.ko
 install ath_hal/ath_hal-smp.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_hal.ko
+install ath_rate/onoe/ath_rate_onoe-smp.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_rate_onoe.ko
 for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
 	install net80211/$i-smp.ko \
 		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/$i.ko
