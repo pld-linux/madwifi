@@ -10,15 +10,18 @@ Summary:	Atheros WiFi card driver
 Summary(pl):	Sterownik karty radiowej Atheros
 Name:		madwifi
 Version:	0
-%define		snap	20050119
-%define		snapdate	2005-01-19
+%define		snap_year	2005
+%define		snap_month	03
+%define		snap_day	11
+%define		snap	%{snap_year}%{snap_month}%{snap_day}
+%define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
 %define		_rel	0.%{snap}.1
 Release:	%{_rel}
 Epoch:		0
 License:	GPL/BSD (partial source)
 Group:		Base/Kernel
-Source0:	http://madwifi.otaku42.de/2005/01/madwifi-cvs-snapshot-%{snapdate}.tar.bz2
-# Source0-md5:	2337699afaa8e3c552097db934ba408e
+Source0:	http://madwifi.otaku42.de/%{snap_year}/%{snap_month}/%{name}-cvs-snapshot-%{snapdate}.tar.bz2
+# Source0-md5:	1e39816635c15bc5f81b65853e2e6d77
 URL:		http://madwifi.sf.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
@@ -85,7 +88,8 @@ Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 %if %{with userspace}
 %{__make} -C tools \
 	CC="%{__cc}" \
-	CFLAGS="\$(INCS) %{rpmcflags}"
+	CFLAGS="-include include/compat.h -\$(INCS) %{rpmcflags}" \
+	KERNELCONF="%{_kernelsrcdir}/config-up"
 %endif
 
 %if %{with kernel}
@@ -104,12 +108,14 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 #	patching/creating makefile(s) (optional)
 #
 	%{__make} -C %{_kernelsrcdir} clean \
+		KERNELCONF="%{_kernelsrcdir}/config-$cfg" \
 		RCS_FIND_IGNORE="-name '*.ko' -o" \
 		M=$PWD O=$PWD \
 		%{?with_verbose:V=1}
 	%{__make} \
 		TARGET="%{_target_base_arch}-elf" \
 		KERNELPATH=%{_kernelsrcdir} \
+		KERNELCONF="%{_kernelsrcdir}/config-$cfg" \
 		TOOLPREFIX= \
 		O=$PWD \
 		CC="%{__cc}" CPP="%{__cpp}" \
@@ -130,6 +136,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with userspace}
 install -d $RPM_BUILD_ROOT%{_bindir}
 %{__make} -C tools install \
+	KERNELCONF="%{_kernelsrcdir}/config-up" \
 	DESTDIR=$RPM_BUILD_ROOT \
 	BINDIR=%{_bindir}
 %endif
