@@ -1,3 +1,7 @@
+# TODO: doesn't build at amd64:
+# ld: Relocatable linking with relocations from format elf32-i386 
+# (/BUILD/madwifi/ath_hal/hal.o) to format elf64-x86-64 
+# (/BUILD/madwifi/ath_hal/ath_hal.o) is not supported
 #
 # Conditional build:
 %bcond_without	dist_kernel	# allow non-distribution kernel
