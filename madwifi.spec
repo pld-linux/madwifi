@@ -1,7 +1,3 @@
-# TODO: doesn't build at amd64:
-# ld: Relocatable linking with relocations from format elf32-i386 
-# (/BUILD/madwifi/ath_hal/hal.o) to format elf64-x86-64 
-# (/BUILD/madwifi/ath_hal/ath_hal.o) is not supported
 #
 # Conditional build:
 %bcond_without	dist_kernel	# allow non-distribution kernel
@@ -29,6 +25,7 @@ URL:		http://madwifi.sf.net/
 BuildRequires:	rpmbuild(macros) >= 1.153
 BuildRequires:	sharutils
 %endif
+ExclusiveArch:	amd64 arm %{ix86} mips ppc xscale
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -110,6 +107,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 		M=$PWD O=$PWD \
 		%{?with_verbose:V=1}
 	%{__make} \
+		TARGET="%{_target_base_arch}-elf" \
 		O=$PWD \
 		CC="%{__cc}" CPP="%{__cpp}" \
 		%{?with_verbose:V=1}
