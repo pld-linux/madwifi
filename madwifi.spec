@@ -1,15 +1,10 @@
 #
-# Replace MODULE_NAME with real module name and MODULE_DIR
-# with required directory name.
-#
 # Conditional build:
 %bcond_without	dist_kernel	# allow non-distribution kernel
 %bcond_without	kernel		# don't build kernel modules
 %bcond_without	smp		# don't build SMP module
 %bcond_with	userspace	# don't build userspace module
 %bcond_with	verbose		# verbose build (V=1)
-#
-# main package.
 #
 Summary:	Atheros WiFi card driver
 Summary(pl):	Sterownik karty radiowej Atheros
@@ -21,7 +16,7 @@ Version:	0
 Release:	%{_rel}
 Epoch:		0
 License:	GPL
-Group:		-
+Group:		Base/Kernel
 Source0:	http://madwifi.otaku42.de/2005/01/madwifi-cvs-snapshot-%{snapdate}.tar.bz2
 # Source0-md5:	2337699afaa8e3c552097db934ba408e
 URL:		http://madwifi.sf.net/
