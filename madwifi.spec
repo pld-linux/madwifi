@@ -3,7 +3,7 @@
 %bcond_without	dist_kernel	# allow non-distribution kernel
 %bcond_without	kernel		# don't build kernel modules
 %bcond_without	smp		# don't build SMP module
-%bcond_with	userspace	# don't build userspace module
+%bcond_without	userspace	# don't build userspace module
 %bcond_with	verbose		# verbose build (V=1)
 #
 Summary:	Atheros WiFi card driver
@@ -15,7 +15,7 @@ Version:	0
 %define		_rel	0.%{snap}.1
 Release:	%{_rel}
 Epoch:		0
-License:	GPL
+License:	GPL/BSD (partial source)
 Group:		Base/Kernel
 Source0:	http://madwifi.otaku42.de/2005/01/madwifi-cvs-snapshot-%{snapdate}.tar.bz2
 # Source0-md5:	2337699afaa8e3c552097db934ba408e
@@ -83,8 +83,9 @@ Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
 %build
 %if %{with userspace}
-
-
+%{__make} -C tools \
+	CC="%{__cc}" \
+	CFLAGS="\$(INCS) %{rpmcflags}"
 %endif
 
 %if %{with kernel}
@@ -108,6 +109,8 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 		%{?with_verbose:V=1}
 	%{__make} \
 		TARGET="%{_target_base_arch}-elf" \
+		KERNELPATH=%{_kernelsrcdir} \
+		TOOLPREFIX= \
 		O=$PWD \
 		CC="%{__cc}" CPP="%{__cpp}" \
 		%{?with_verbose:V=1}
@@ -125,8 +128,10 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %if %{with userspace}
-
-
+install -d $RPM_BUILD_ROOT%{_bindir}
+%{__make} -C tools install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	BINDIR=%{_bindir}
 %endif
 
 %if %{with kernel}
@@ -170,6 +175,14 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-n kernel-smp-net-madwifi
 %depmod %{_kernel_ver}smp
 
+%if %{with userspace}
+%files
+%defattr(644,root,root,755)
+%doc COPYRIGHT README
+%attr(755,root,root) %{_bindir}/80211*
+%attr(755,root,root) %{_bindir}/ath*
+%endif
+
 %if %{with kernel}
 %files -n kernel-net-madwifi
 %defattr(644,root,root,755)
@@ -180,10 +193,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/net/*.ko*
 %endif
-%endif
-
-%if %{with userspace}
-%files
-%defattr(644,root,root,755)
-
 %endif
