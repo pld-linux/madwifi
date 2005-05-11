@@ -28,7 +28,7 @@ URL:		http://madwifi.sf.net/
 BuildRequires:	rpmbuild(macros) >= 1.153
 BuildRequires:	sharutils
 %endif
-ExclusiveArch:	amd64 arm %{ix86} mips ppc xscale
+ExclusiveArch:	%{x8664} arm %{ix86} mips ppc xscale
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
