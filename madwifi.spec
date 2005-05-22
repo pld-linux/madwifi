@@ -15,7 +15,7 @@ Version:	0
 %define		snap_day	20
 %define		snap	%{snap_year}%{snap_month}%{snap_day}
 %define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
-%define		_rel	0.%{snap}.1
+%define		_rel	0.%{snap}.2
 Release:	%{_rel}
 Epoch:		0
 License:	GPL/BSD (partial source)
@@ -135,6 +135,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with userspace}
 install -d $RPM_BUILD_ROOT%{_bindir}
+install tools/80211debug $RPM_BUILD_ROOT%{_bindir}/80211debug
+install tools/80211stats $RPM_BUILD_ROOT%{_bindir}/80211stats
+install tools/athchans $RPM_BUILD_ROOT%{_bindir}/athchans
+install tools/athctrl $RPM_BUILD_ROOT%{_bindir}/athctrl
+install tools/athdebug $RPM_BUILD_ROOT%{_bindir}/athdebug
+install tools/athkey $RPM_BUILD_ROOT%{_bindir}/athkey
+install tools/athstats $RPM_BUILD_ROOT%{_bindir}/athstats
 %{__make} -C tools install \
 	KERNELCONF="%{_kernelsrcdir}/config-up" \
 	DESTDIR=$RPM_BUILD_ROOT \
