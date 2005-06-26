@@ -11,17 +11,17 @@ Summary(pl):	Sterownik karty radiowej Atheros
 Name:		madwifi
 Version:	0
 %define		snap_year	2005
-%define		snap_month	05
-%define		snap_day	20
+%define		snap_month	06
+%define		snap_day	26
 %define		snap	%{snap_year}%{snap_month}%{snap_day}
 %define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
-%define		_rel	0.%{snap}.2
+%define		_rel	0.%{snap}.1
 Release:	%{_rel}
 Epoch:		0
 License:	GPL/BSD (partial source)
 Group:		Base/Kernel
 Source0:	http://madwifi.otaku42.de/%{snap_year}/%{snap_month}/%{name}-cvs-snapshot-%{snapdate}.tar.bz2
-# Source0-md5:	4e5cc7cc2f5c33dbb865de9ba0003ae0
+# Source0-md5:	0853408b1ae8c4741547cda4d58cd4df
 URL:		http://madwifi.sf.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
