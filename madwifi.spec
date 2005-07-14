@@ -1,3 +1,5 @@
+# TODO: kernel header is additional BR
+#
 #
 # Conditional build:
 %bcond_without	dist_kernel	# allow non-distribution kernel
@@ -21,7 +23,7 @@ Epoch:		0
 License:	GPL/BSD (partial source)
 Group:		Base/Kernel
 Source0:	http://madwifi.otaku42.de/%{snap_year}/%{snap_month}/%{name}-cvs-snapshot-%{snapdate}.tar.bz2
-# Source0-md5:	0853408b1ae8c4741547cda4d58cd4df
+# Source0-md5:	1995439621b08b3a7851c03870b3111c
 URL:		http://madwifi.sf.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
