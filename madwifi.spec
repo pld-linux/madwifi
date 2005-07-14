@@ -11,8 +11,8 @@ Summary(pl):	Sterownik karty radiowej Atheros
 Name:		madwifi
 Version:	0
 %define		snap_year	2005
-%define		snap_month	06
-%define		snap_day	26
+%define		snap_month	07
+%define		snap_day	14
 %define		snap	%{snap_year}%{snap_month}%{snap_day}
 %define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
 %define		_rel	0.%{snap}.1
@@ -81,6 +81,17 @@ Sterownik dla Linuksa do kart Atheros.
 
 Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
+%package devel
+Summary:	Header files for madwifi
+Summary(pl):	Pliki nag³ówkowe dla madwifi
+Group:		Development/Libraries
+
+%description devel
+Header files for madwifi.
+
+%description devel -l pl
+Pliki nag³ówkowe dla madwifi.
+
 %prep
 %setup -q -n %{name}
 
@@ -123,7 +134,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 
 	mv ath/ath_pci{,-$cfg}.ko
 	mv ath_hal/ath_hal{,-$cfg}.ko
-	mv ath_rate/onoe/ath_rate_onoe{,-$cfg}.ko
+	mv ath_rate/sample/ath_rate_sample{,-$cfg}.ko
 	for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
 		mv net80211/$i{,-$cfg}.ko
 	done
@@ -142,6 +153,7 @@ install tools/athctrl $RPM_BUILD_ROOT%{_bindir}/athctrl
 install tools/athdebug $RPM_BUILD_ROOT%{_bindir}/athdebug
 install tools/athkey $RPM_BUILD_ROOT%{_bindir}/athkey
 install tools/athstats $RPM_BUILD_ROOT%{_bindir}/athstats
+
 %{__make} -C tools install \
 	KERNELCONF="%{_kernelsrcdir}/config-up" \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -154,8 +166,8 @@ install ath/ath_pci-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_pci.ko
 install ath_hal/ath_hal-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_hal.ko
-install ath_rate/onoe/ath_rate_onoe-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_rate_onoe.ko
+install ath_rate/sample/ath_rate_sample-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_rate_sample.ko
 for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
 	install net80211/$i-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
 		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/$i.ko
@@ -165,14 +177,20 @@ install ath/ath_pci-smp.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_pci.ko
 install ath_hal/ath_hal-smp.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_hal.ko
-install ath_rate/onoe/ath_rate_onoe-smp.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_rate_onoe.ko
+install ath_rate/sample/ath_rate_sample-smp.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_rate_sample.ko
 for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
 	install net80211/$i-smp.ko \
 		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/$i.ko
 done
 %endif
 %endif
+
+install -d $RPM_BUILD_ROOT%{_includedir}/madwifi/net80211
+install -d $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys
+install net80211/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/net80211/
+install include/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/include/
+install include/sys/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -208,3 +226,7 @@ rm -rf $RPM_BUILD_ROOT
 /lib/modules/%{_kernel_ver}smp/net/*.ko*
 %endif
 %endif
+
+%files devel
+%defattr(644,root,root,755)
+/%{_includedir}/madwifi
