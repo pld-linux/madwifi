@@ -1,5 +1,5 @@
-# TODO: kernel header is additional BR
 #
+# TODO: kernel header is additional BR  (whatever it means???)
 #
 # Conditional build:
 %bcond_without	dist_kernel	# allow non-distribution kernel
@@ -38,6 +38,17 @@ Atheros WiFi card driver.
 
 %description -l pl
 Sterownik karty radiowej Atheros.
+
+%package devel
+Summary:	Header files for madwifi
+Summary(pl):	Pliki nag³ówkowe dla madwifi
+Group:		Development/Libraries
+
+%description devel
+Header files for madwifi.
+
+%description devel -l pl
+Pliki nag³ówkowe dla madwifi.
 
 # kernel subpackages.
 
@@ -82,17 +93,6 @@ This package contains Linux SMP module.
 Sterownik dla Linuksa do kart Atheros.
 
 Ten pakiet zawiera modu³ j±dra Linuksa SMP.
-
-%package devel
-Summary:	Header files for madwifi
-Summary(pl):	Pliki nag³ówkowe dla madwifi
-Group:		Development/Libraries
-
-%description devel
-Header files for madwifi.
-
-%description devel -l pl
-Pliki nag³ówkowe dla madwifi.
 
 %prep
 %setup -q -n %{name}
@@ -160,6 +160,12 @@ install tools/athstats $RPM_BUILD_ROOT%{_bindir}/athstats
 	KERNELCONF="%{_kernelsrcdir}/config-up" \
 	DESTDIR=$RPM_BUILD_ROOT \
 	BINDIR=%{_bindir}
+
+install -d $RPM_BUILD_ROOT%{_includedir}/madwifi/net80211
+install -d $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys
+install net80211/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/net80211
+install include/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/include
+install include/sys/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys
 %endif
 
 %if %{with kernel}
@@ -188,12 +194,6 @@ done
 %endif
 %endif
 
-install -d $RPM_BUILD_ROOT%{_includedir}/madwifi/net80211
-install -d $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys
-install net80211/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/net80211/
-install include/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/include/
-install include/sys/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys/
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -215,6 +215,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYRIGHT README
 %attr(755,root,root) %{_bindir}/80211*
 %attr(755,root,root) %{_bindir}/ath*
+
+%files devel
+%defattr(644,root,root,755)
+%{_includedir}/madwifi
 %endif
 
 %if %{with kernel}
@@ -228,7 +232,3 @@ rm -rf $RPM_BUILD_ROOT
 /lib/modules/%{_kernel_ver}smp/net/*.ko*
 %endif
 %endif
-
-%files devel
-%defattr(644,root,root,755)
-/%{_includedir}/madwifi
