@@ -169,27 +169,27 @@ install include/sys/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys
 %endif
 
 %if %{with kernel}
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/net
+install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/kernel/net
 install ath/ath_pci-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_pci.ko
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/ath_pci.ko
 install ath_hal/ath_hal-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_hal.ko
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/ath_hal.ko
 install ath_rate/sample/ath_rate_sample-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/ath_rate_sample.ko
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/ath_rate_sample.ko
 for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
 	install net80211/$i-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
-		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net/$i.ko
+		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/$i.ko
 done
 %if %{with smp} && %{with dist_kernel}
 install ath/ath_pci-smp.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_pci.ko
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/ath_pci.ko
 install ath_hal/ath_hal-smp.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_hal.ko
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/ath_hal.ko
 install ath_rate/sample/ath_rate_sample-smp.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/ath_rate_sample.ko
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/ath_rate_sample.ko
 for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
 	install net80211/$i-smp.ko \
-		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/net/$i.ko
+		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/$i.ko
 done
 %endif
 %endif
@@ -224,11 +224,11 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with kernel}
 %files -n kernel-net-madwifi
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/net/*.ko*
+/lib/modules/%{_kernel_ver}/kernel/net/*.ko*
 
 %if %{with smp} && %{with dist_kernel}
 %files -n kernel-smp-net-madwifi
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}smp/net/*.ko*
+/lib/modules/%{_kernel_ver}smp/kernel/net/*.ko*
 %endif
 %endif
