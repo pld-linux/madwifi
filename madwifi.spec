@@ -7,6 +7,11 @@
 %bcond_without	smp		# don't build SMP module
 %bcond_without	userspace	# don't build userspace module
 %bcond_with	verbose		# verbose build (V=1)
+
+%ifnarch %{x8664} arm %{ix86} mips ppc xscale
+%undefine	with_kernel
+%endif
+
 #
 Summary:	Atheros WiFi card driver
 Summary(pl):	Sterownik karty radiowej Atheros
@@ -30,7 +35,8 @@ URL:		http://madwifi.sf.net/
 BuildRequires:	rpmbuild(macros) >= 1.153
 BuildRequires:	sharutils
 %endif
-ExclusiveArch:	%{x8664} arm %{ix86} mips ppc xscale
+# for kernel drivers
+# ExclusiveArch:	%{x8664} arm %{ix86} mips ppc xscale
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
