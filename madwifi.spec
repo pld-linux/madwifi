@@ -18,7 +18,7 @@ Version:	0
 %define		snap_day	25
 %define		snap	%{snap_year}%{snap_month}%{snap_day}
 %define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
-%define		_rel	0.%{snap}.2
+%define		_rel	0.%{snap}.1
 Release:	%{_rel}
 Epoch:		0
 License:	GPL/BSD (partial source)
