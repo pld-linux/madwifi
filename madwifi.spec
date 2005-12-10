@@ -103,7 +103,8 @@ Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 %{__make} -C tools \
 	CC="%{__cc}" \
 	CFLAGS="-include include/compat.h -\$(INCS) %{rpmcflags}" \
-	KERNELCONF="%{_kernelsrcdir}/config-up"
+	KERNELCONF="%{_kernelsrcdir}/config-up" \
+	KERNELPATH="%{_kernelsrcdir}"
 %endif
 
 %if %{with kernel}
@@ -126,6 +127,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 		KERNELCONF="%{_kernelsrcdir}/config-$cfg" \
 		RCS_FIND_IGNORE="-name '*.ko' -o" \
 		M=$PWD O=$PWD \
+		KERNELPATH="%{_kernelsrcdir}" \
 		%{?with_verbose:V=1}
 	%{__make} \
 		TARGET="%{_target_base_arch}-elf" \
@@ -160,6 +162,7 @@ install tools/athstats $RPM_BUILD_ROOT%{_bindir}/athstats
 
 %{__make} -C tools install \
 	KERNELCONF="%{_kernelsrcdir}/config-up" \
+	KERNELPATH="%{_kernelsrcdir}" \
 	DESTDIR=$RPM_BUILD_ROOT \
 	BINDIR=%{_bindir}
 
