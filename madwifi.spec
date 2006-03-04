@@ -8,24 +8,23 @@
 %bcond_without	userspace	# don't build userspace module
 %bcond_with	verbose		# verbose build (V=1)
 
-%define		snap_year	2006
-%define		snap_month	03
-%define		snap_day	04
-%define		snap	%{snap_year}%{snap_month}%{snap_day}
-%define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
-%define		_release		1
-
 #
 Summary:	Atheros WiFi card driver
 Summary(pl):	Sterownik karty radiowej Atheros
-Name:		madwifi-ng
-Version:	r1460
-Release:	%{_release}
+Name:		madwifi
+Version:	0
+%define		snap_year	2005
+%define		snap_month	11
+%define		snap_day	25
+%define		snap	%{snap_year}%{snap_month}%{snap_day}
+%define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
+%define		_rel	0.%{snap}.2
+Release:	%{_rel}
 Epoch:		0
 License:	GPL/BSD (partial source)
 Group:		Base/Kernel
-Source0:	http://snapshots.madwifi.org/%{name}/%{name}-%{version}-%{snap}.tar.gz
-# Source0-md5:	51d5b9c718a78385f7f525a1ed0120e0
+Source0:	http://madwifi.otaku42.de/%{snap_year}/%{snap_month}/%{name}-cvs-snapshot-%{snapdate}.tar.bz2
+# Source0-md5:	edb2791b3c1df2cd5db57d6a52670d62
 URL:		http://madwifi.sf.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
@@ -57,7 +56,7 @@ Pliki nag³ówkowe dla madwifi.
 %package -n kernel-net-madwifi
 Summary:	Linux driver for Atheros cards
 Summary(pl):	Sterownik dla Linuksa do kart Atheros
-Release:	%{_release}@%{_kernel_ver_str}
+Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 %if %{with dist_kernel}
@@ -78,7 +77,7 @@ Ten pakiet zawiera modu³ j±dra Linuksa.
 %package -n kernel-smp-net-madwifi
 Summary:	Linux SMP driver for %{name} cards
 Summary(pl):	Sterownik dla Linuksa SMP do kart %{name}
-Release:	%{_release}@%{_kernel_ver_str}
+Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 %if %{with dist_kernel}
@@ -97,7 +96,7 @@ Sterownik dla Linuksa do kart Atheros.
 Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
 %prep
-%setup -q -n %{name}-%{version}-%{snap}
+%setup -q -n %{name}
 
 %build
 %if %{with userspace}
@@ -110,51 +109,48 @@ Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
 %if %{with kernel}
 # kernel module(s)
-
 for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
 	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
 		exit 1
 	fi
-	rm -rf o/
-	install -d o/include/linux
-	ln -sf %{_kernelsrcdir}/config-$cfg o/.config
-	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
-	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h
-	ln -sfn %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
-%if %{with dist_kernel}
-	%{__make} -C %{_kernelsrcdir} O=$PWD/o prepare scripts
+	rm -rf include/{linux,config,asm}
+	install -d include/{linux,config}
+	ln -sf %{_kernelsrcdir}/config-$cfg .config
+	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h include/linux/autoconf.h
+%ifarch ppc ppc64
+        install -d include/asm
+        [ ! -d %{_kernelsrcdir}/include/asm-powerpc ] || ln -sf %{_kernelsrcdir}/include/asm-powerpc/* include/asm
+        [ ! -d %{_kernelsrcdir}/include/asm-%{_target_base_arch} ] || ln -snf %{_kernelsrcdir}/include/asm-%{_target_base_arch}/* include/asm
 %else
-	install -d o/include/config
-	touch o/include/config/MARKER
-	ln -sf %{_kernelsrcdir}/scripts o/scripts
+        ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
 %endif
-
-
+	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
+	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
+	touch include/config/MARKER
 #
 #	patching/creating makefile(s) (optional)
 #
+	%{__make} -C %{_kernelsrcdir} clean \
+		KERNELCONF="%{_kernelsrcdir}/config-$cfg" \
+		RCS_FIND_IGNORE="-name '*.ko' -o" \
+		M=$PWD O=$PWD \
+		KERNELPATH="%{_kernelsrcdir}" \
+		%{?with_verbose:V=1}
+	%{__make} \
+		TARGET="%{_target_base_arch}-elf" \
+		KERNELPATH=%{_kernelsrcdir} \
+		KERNELCONF="%{_kernelsrcdir}/config-$cfg" \
+		TOOLPREFIX= \
+		O=$PWD \
+		CC="%{__cc}" CPP="%{__cpp}" \
+		%{?with_verbose:V=1}
 
-       %{__make} -C %{_kernelsrcdir} clean \
-                KERNELCONF="%{_kernelsrcdir}/config-$cfg" \
-                RCS_FIND_IGNORE="-name '*.ko' -o" \
-                M=$PWD O=$PWD \
-                %{?with_verbose:V=1}
-
-        %{__make} \
-                TARGET="%{_target_base_arch}-elf" \
-                KERNELPATH=%{_kernelsrcdir} \
-                KERNELCONF="%{_kernelsrcdir}/config-$cfg" \
-                TOOLPREFIX= \
-                O=$PWD/o \
-                CC="%{__cc}" CPP="%{__cpp}" \
-                %{?with_verbose:V=1}
-
-
-
-	for i in `find . -name "*.ko" ! -name "*-smp.ko" `; do
-		mv $i `basename $i .ko`-$cfg.ko
+	mv ath/ath_pci{,-$cfg}.ko
+	mv ath_hal/ath_hal{,-$cfg}.ko
+	mv ath_rate/sample/ath_rate_sample{,-$cfg}.ko
+	for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
+		mv net80211/$i{,-$cfg}.ko
 	done
-	
 done
 %endif
 
@@ -175,8 +171,7 @@ install tools/athstats $RPM_BUILD_ROOT%{_bindir}/athstats
 	KERNELCONF="%{_kernelsrcdir}/config-up" \
 	KERNELPATH="%{_kernelsrcdir}" \
 	DESTDIR=$RPM_BUILD_ROOT \
-	BINDIR=%{_bindir} \
-	MANDIR=%{_mandir}	
+	BINDIR=%{_bindir}
 
 install -d $RPM_BUILD_ROOT%{_includedir}/madwifi/net80211
 install -d $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys
@@ -186,20 +181,33 @@ install include/sys/*.h $RPM_BUILD_ROOT%{_includedir}/madwifi/include/sys
 %endif
 
 %if %{with kernel}
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net
-for i in `find . -name "*-up.ko"`; do
-	install $i $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/`basename $i -up.ko`.ko
+install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/kernel/net
+install ath/ath_pci-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/ath_pci.ko
+install ath_hal/ath_hal-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/ath_hal.ko
+install ath_rate/sample/ath_rate_sample-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/ath_rate_sample.ko
+for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
+	install net80211/$i-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
+		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/net/$i.ko
 done
 %if %{with smp} && %{with dist_kernel}
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net
-for i in `find . -name "*-smp.ko"`; do
-	install $i $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/`basename $i -smp.ko`.ko
+install ath/ath_pci-smp.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/ath_pci.ko
+install ath_hal/ath_hal-smp.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/ath_hal.ko
+install ath_rate/sample/ath_rate_sample-smp.ko \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/ath_rate_sample.ko
+for i in wlan_wep wlan_xauth wlan_acl wlan_ccmp wlan_tkip wlan; do
+	install net80211/$i-smp.ko \
+		$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/net/$i.ko
 done
 %endif
 %endif
 
 %clean
-# rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %post	-n kernel-net-madwifi
 %depmod %{_kernel_ver}
@@ -219,8 +227,6 @@ done
 %doc COPYRIGHT README
 %attr(755,root,root) %{_bindir}/80211*
 %attr(755,root,root) %{_bindir}/ath*
-%attr(755,root,root) %{_bindir}/wlan*
-%{_mandir}/man8/*
 
 %files devel
 %defattr(644,root,root,755)
