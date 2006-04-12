@@ -9,25 +9,25 @@
 %bcond_with	verbose		# verbose build (V=1)
 
 #
-Summary:	Atheros WiFi card driver
-Summary(pl):	Sterownik karty radiowej Atheros
-Name:		madwifi
-Version:	0
 %define		snap_year	2005
 %define		snap_month	11
 %define		snap_day	25
 %define		snap	%{snap_year}%{snap_month}%{snap_day}
 %define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
 %define		_rel	0.%{snap}.2
+Summary:	Atheros WiFi card driver
+Summary(pl):	Sterownik karty radiowej Atheros
+Name:		madwifi
+Version:	0
 Release:	%{_rel}
 Epoch:		0
 License:	GPL/BSD (partial source)
 Group:		Base/Kernel
 Source0:	http://madwifi.otaku42.de/%{snap_year}/%{snap_month}/%{name}-cvs-snapshot-%{snapdate}.tar.bz2
 # Source0-md5:	edb2791b3c1df2cd5db57d6a52670d62
-URL:		http://madwifi.sf.net/
+URL:		http://madwifi.sourceforge.net/
 %if %{with kernel}
-%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 3:2.6.7}
 BuildRequires:	rpmbuild(macros) >= 1.153
 BuildRequires:	sharutils
 %endif
