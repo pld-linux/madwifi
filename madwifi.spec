@@ -144,6 +144,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 		TOOLPREFIX= \
 		O=$PWD/o \
 		CC="%{__cc}" CPP="%{__cpp}" \
+		KERNELRELEASE="%{_kernel_ver}" \
 		%{?with_verbose:V=1}
 
 	mv ath/ath_pci{,-$cfg}.ko
