@@ -16,7 +16,7 @@
 %define		snapdate	%{snap_year}-%{snap_month}-%{snap_day}
 %define		_rel	0.%{snap}.2
 Summary:	Atheros WiFi card driver
-Summary(pl):	Sterownik karty radiowej Atheros
+Summary(pl.UTF-8):   Sterownik karty radiowej Atheros
 Name:		madwifi
 Version:	0
 Release:	%{_rel}
@@ -37,25 +37,25 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Atheros WiFi card driver.
 
-%description -l pl
+%description -l pl.UTF-8
 Sterownik karty radiowej Atheros.
 
 %package devel
 Summary:	Header files for madwifi
-Summary(pl):	Pliki nag≥Ûwkowe dla madwifi
+Summary(pl.UTF-8):   Pliki nag≈Ç√≥wkowe dla madwifi
 Group:		Development/Libraries
 
 %description devel
 Header files for madwifi.
 
-%description devel -l pl
-Pliki nag≥Ûwkowe dla madwifi.
+%description devel -l pl.UTF-8
+Pliki nag≈Ç√≥wkowe dla madwifi.
 
 # kernel subpackages.
 
 %package -n kernel%{_alt_kernel}-net-madwifi
 Summary:	Linux driver for Atheros cards
-Summary(pl):	Sterownik dla Linuksa do kart Atheros
+Summary(pl.UTF-8):   Sterownik dla Linuksa do kart Atheros
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
@@ -69,14 +69,14 @@ This is driver for Atheros card for Linux.
 
 This package contains Linux module.
 
-%description -n kernel%{_alt_kernel}-net-madwifi -l pl
+%description -n kernel%{_alt_kernel}-net-madwifi -l pl.UTF-8
 Sterownik dla Linuksa do kart Atheros.
 
-Ten pakiet zawiera modu≥ j±dra Linuksa.
+Ten pakiet zawiera modu≈Ç jƒÖdra Linuksa.
 
 %package -n kernel%{_alt_kernel}-smp-net-madwifi
 Summary:	Linux SMP driver for %{name} cards
-Summary(pl):	Sterownik dla Linuksa SMP do kart %{name}
+Summary(pl.UTF-8):   Sterownik dla Linuksa SMP do kart %{name}
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
@@ -90,10 +90,10 @@ This is driver for Atheros cards for Linux.
 
 This package contains Linux SMP module.
 
-%description -n kernel%{_alt_kernel}-smp-net-madwifi -l pl
+%description -n kernel%{_alt_kernel}-smp-net-madwifi -l pl.UTF-8
 Sterownik dla Linuksa do kart Atheros.
 
-Ten pakiet zawiera modu≥ j±dra Linuksa SMP.
+Ten pakiet zawiera modu≈Ç jƒÖdra Linuksa SMP.
 
 %prep
 %setup -q -n %{name}
